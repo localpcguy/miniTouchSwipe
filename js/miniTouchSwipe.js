@@ -8,10 +8,7 @@ Documentation:
 Examples:         
 -------------------------------*/
 (function miniTouchSwipe($, opts) {
-    var defaults = {
-            callback: swipePage,
-            marginOfError: 40
-        },
+    var ua = navigator.userAgent,
         isDroidTablet = ((ua.toLowerCase().indexOf("android 3.1") >= 0 || ua.toLowerCase().indexOf("android 3.2") >= 0) && ua.toLowerCase().indexOf("mobile") <= 0),
         touches = {
             touchstart: { x: -1, y: -1 },
@@ -64,14 +61,14 @@ Examples:
                                     touches.touchStarted = false;
                                 }
                             }
-                            event.preventDefault(); // TODO: remove jQuery requirement?
+                            event.preventDefault();
                             break;
                         case 'touchend':
                             touches.touchend = true;
                             if (touches.touchstart.x > -1 && touches.touchmove.x > -1) {
-                                if (touches.touchstart.x < touches.touchmove.x && touches.touchmove.x - touches.touchstart.x > 40) {
+                                if (touches.touchstart.x < touches.touchmove.x && touches.touchmove.x - touches.touchstart.x > options.marginOfError) {
                                     touches.direction = 'right';
-                                } else if (touches.touchstart.x > touches.touchmove.x && touches.touchstart.x - touches.touchmove.x > 40) {
+                                } else if (touches.touchstart.x > touches.touchmove.x && touches.touchstart.x - touches.touchmove.x > options.marginOfError) {
                                     touches.direction = 'left';
                                 } else {
                                     touches.direction = 'none';
@@ -87,13 +84,20 @@ Examples:
                     //alert(err);
                 }
             }
-            return options.callback.call(touches);
+            return options.callback(touches);
         },
         swipePage = function(touches) {
+            $('#direction').text("swiped: " + touches.direction);
             return touches;
         }, 
+        defaults = {
+            callback: swipePage,
+            marginOfError: 40
+        },
         options = $.extend(defaults, opts);
+        
+        console.log(typeof options.callback);
 
     // Initilize touch listener
     $(document).on('touchstart touchmove touchend', touchHandler);
-})(jQuery, {});
+})(jQuery);
