@@ -84,20 +84,14 @@ Examples:
                     //alert(err);
                 }
             }
-            return options.callback(touches);
+            return typeof options.callback === 'function' ? options.callback(touches) : touches;
         },
-        swipePage = function(touches) {
-            $('#direction').text("swiped: " + touches.direction);
-            return touches;
-        }, 
         defaults = {
-            callback: swipePage,
+            callback: null,
             marginOfError: 40
         },
         options = $.extend(defaults, opts);
-        
-        console.log(typeof options.callback);
 
     // Initilize touch listener
     $(document).on('touchstart touchmove touchend', touchHandler);
-})(jQuery);
+})(jQuery, { callback: demoSwipe });
