@@ -84,6 +84,7 @@ Examples:
                     //alert(err);
                 }
             }
+            $(document).trigger('miniTouchSwipe', [touches]);
             return typeof options.callback === 'function' ? options.callback(touches) : touches;
         },
         defaults = {
